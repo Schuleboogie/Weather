@@ -1,4 +1,3 @@
-=======
 # Blessuð blíðan
 Weather app with an [Angular](https://angularjs.org/) front end and a backend REST service written in [Go](https://golang.org/). Uses local storage to store fetched weather information. Weather information fetched from the [Icelandic Meteorological Office](http://www.vedur.is/) with the help of [APIS.is](https://github.com/apis-is/apis).
 
