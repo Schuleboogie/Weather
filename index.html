@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html ng-app="weather">
+<head>
+	<title>Blessuð blíðan</title>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" type="text/css" href="/static/icons/css/weather-icons.min.css">
+	<link rel="stylesheet" type="text/css" href="/static/icons/css/weather-icons-wind.min.css">
+	<link rel="stylesheet" type="text/css" href="/static/css/normalize.css">
+	<link rel="stylesheet" type="text/css" href="/static/css/app.css">
+	<link rel="icon" href="/static/icons/weather.ico">
+</head>
+<body>
+	<div class="container" ng-controller="WeatherInfo" ng-style="weather.background">
+		<div class="stations" ng-show="StationList">
+			<h1>Stöðvar</h1>
+			<input type="text" class="station-search" ng-model="stationSearch" placeholder="Leita að stöð..." autofocus>
+			<div class="scroll-list">
+				<ul class="station-list">
+					<li ng-repeat="station in stations | filter:stationSearch" ng-hide="!current(station)"><button class="station-button" ng-click="blurButton($event);selectStation(station)">{{ current(station) }}</button></li>
+				</ul>
+			</div>
+		</div>
+		<div class="error" ng-show="weather.Error" ng-hide="!weather.Error || StationList">{{ weather.Error }}</div>
+		<div class="results" ng-hide="weather.Error || StationList">
+			<h1 class="station-name">{{ weather.StationName }}</h1>
+			<div class="temperature" ng-mouseover="temphovered=true" ng-mouseleave="temphovered=false">
+				<span class="celsius" ng-show="celsius">{{ weather.Temperature }}<a class="unit" ng-mouseover="unitC=unitFahrenheit" ng-mouseleave="unitC=unitCelsius" ng-class="{hover: temphovered}" ng-click="unitC=unitFahrenheit;celsius=false">{{ unitC }}</a></span>
+				<span class="fahreneheit" ng-show="!celsius">{{ weather.TemperatureFahrenheit }}<a class="unit" ng-mouseover="unitF=unitCelsius" ng-mouseleave="unitF=unitFahrenheit" ng-class="{hover: temphovered}" ng-click="unitF=unitCelsius;celsius=true">{{ unitF }}</a></span>
+			</div>
+			<div class="information-icons">
+				<span class="weather" ng-show="weather.icon"><i class="wi {{ weather.icon }}"></i></span>
+				<span class="wind" ng-show="weather.WindSpeed"><span class="wind-speed-alt" ng-hide="weather.wind">Vindhraði: </span><span class="wind-speed">{{ weather.WindSpeed }}</span><i class="wi {{ weather.wind }}" ng-show="weather.wind"></i></span>
+				<span class="moon" ng-show="weather.moon"><i class="wi {{ weather.moon }} moon-icon"></i></span>
+			</div>
+			<button class="more-button" ng-click="more=!more;blurButton($event)" ng-class="{clicked: more}">Frekari upplýsingar</button>
+			<div class="information" ng-show="more">
+				<span ng-show="weather.TopWindSpeed">Mesti vindhraði: {{ weather.TopWindSpeed }} m/s</span>
+				<span ng-show="weather.TopWindGust">Mesta vindhviða: {{ weather.TopWindGust}} m/s</span>
+				<span ng-show="weather.CloudCover">Skýjahula: {{ weather.CloudCover }}%</span>
+				<span ng-show="weather.Visibility">Skyggni: {{ weather.Visibility }} km</span>
+				<span ng-show="weather.AirPressure">Loftþrýstingur: {{ weather.AirPressure }} hPa</span>
+				<span ng-show="weather.Humidity">Rakastig: {{ weather.Humidity }}%</span>
+				<span ng-show="weather.Precipitation">Úrkoma: {{ weather.Precipitation }} mm/klst</span>
+				<div class="timestamp">Mæling tekin {{ weather.Time }}</div>
+			</div>
+		</div>
+		<button class="stations-button" ng-click="blurButton($event);toggleStations()" ng-class="{clicked: StationList}">{{ moreButtonText }}</button>
+	</div>
+	<script src="/static/scripts/angular.min.js"></script>
+	<script src="/static/scripts/angular-animate.min.js"></script>
+	<script src="/static/scripts/angular-local-storage.min.js"></script>
+	<script src="/static/scripts/moment-with-locales.js"></script>
+	<script src="/static/scripts/suncalc.js"></script>
+	<script src="/static/scripts/app.js"></script>
+</body>
+</html>

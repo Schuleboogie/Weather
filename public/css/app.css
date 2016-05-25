@@ -1,0 +1,267 @@
+@import url(https://fonts.googleapis.com/css?family=Montserrat:400,700);
+
+html, body {
+	width: 100%;
+	height: 100%;
+	background-color: #FFFFFF;
+	font-size: 17px;
+	font-family: "Montserrat", Helvetica, sans-serif;
+	color: #000000;
+}
+body {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+div.container {
+	width: 95%;
+	height: 95%;
+	/* Sunny background-color: #FBED63; */
+	/*background-color: rgba(106,198,249,0.5);*/
+	text-align: center;
+	text-transform: uppercase;
+	position: relative;
+	overflow-y: auto;
+	clear: both;
+}
+/* Height fix */
+@media (max-height: 700px) {
+	div.container {
+		width: 100%;
+		height: 100%;
+	}
+	button.stations-button {
+		right: 1em;
+		bottom: 1em;
+	}
+}
+div.error {
+	padding-top: 2em;
+	font-size: 1.5em;
+}
+i.wi {
+	font-size: 5em;
+}
+span {
+	display: block;
+}
+button:focus {
+	outline: none;
+}
+div.results.ng-hide-remove {
+	animation: 0.5s slidein ease;
+}
+@keyframes slidein {
+	from {
+		margin-right: 10em;
+		opacity: 0;
+	}
+	to {
+		margin-right: 0;
+		opacity: 1.0;
+	}
+}
+div.temperature {
+	font-size: 11em;
+	font-weight: bold;
+	position: relative;
+}
+div.temperature span {
+	display: inline-block;
+}
+div.temperature a {
+	position: absolute;
+	font-size: 0.15em;
+	opacity: 0.5;
+}
+div.temperature a.unit {
+	top: 1.5em;
+}
+div.temperature a.unit.hover {
+	opacity: 1.0;
+}
+div.information-icons span {
+	display: inline-block;
+	padding: 0.2em;
+}
+div.information-icons span.wind-speed {
+	font-size: 5em;
+}
+div.information-icons span.wind-speed-alt {
+	display: block;
+}
+button.more-button {
+	background-color: #FFFFFF;
+	border: none;
+	border-radius: 5px;
+	margin: 1em 0 1em 0;
+	padding: 0.4em;
+
+}
+button.more-button:focus {
+	background-color: #EAEAEA;
+}
+button.more-button.clicked {
+	background-color: #EAEAEA;
+}
+div.information {
+	width: 70%;
+	margin: 0 auto;
+	animation: 1s slidedown ease;
+}
+@keyframes slidedown {
+	from {
+		opacity: 0;
+		margin-top: -1em;
+	}
+	to {
+		opacity: 1.0;
+		margin-top: 0;
+	}
+}
+div.information.ng-hide-add {
+	animation: 0.5s slideup ease;
+}
+@keyframes slideup {
+	from {
+		opacity: 1.0;
+		margin-top: 0;
+	}
+	to {
+		opacity: 0;
+		margin-top: -1em;
+	}
+}
+div.information span {
+	display: inline-block;
+	padding: 0.2em;
+	text-transform: none;
+}
+div.information div.timestamp {
+	margin: 1em;
+	font-size: 0.8em;
+	opacity: 0.5;
+}
+button.stations-button {
+	position: absolute;
+	bottom: 0.5em;
+	right: 0.5em;
+	background-color: transparent;
+	border: none;
+
+	border-radius: 5px;
+	padding: 0.7em;
+}
+button.stations-button:focus {
+	text-decoration: underline;
+}
+button.stations-button:hover {
+	text-decoration: underline;
+}
+button.stations-button.clicked {
+	background-color: #EAEAEA;
+}
+button.stations-button.clicked:hover {
+	text-decoration: none;
+}
+/* Position button relative to viewport when container w/h 100% */
+@media (max-height: 700px) {
+	button.stations-button {
+		position: fixed;
+		right: 0.5em;
+		bottom: 0.5em;
+	}
+}
+@media (min-height: 1300px) {
+	button.stations-button {
+		top: 0.5em;
+		bottom: auto;
+	}
+}
+div.stations {
+	height: 85%;
+	overflow: hidden;
+}
+/* Hiding the scrolbar */
+div.stations div.scroll-list {
+	height: 90%;
+	overflow: auto;
+	margin: 0 -100% 0 0;
+	padding-right: 100%;
+}
+/* Centering fix */
+@media (max-width: 1700px) {
+	div.stations div.scroll-list {
+		padding-right: 99%;
+	}
+}
+@media (max-width: 700px) {
+	div.stations div.scroll-list {
+		padding-right: 98%;
+	}
+}
+@media (max-width: 500px) {
+	div.stations div.scroll-list {
+		padding-right: 100%;
+	}
+}
+div.stations.ng-hide-remove {
+	animation: 0.5s slidein ease;
+}
+div.stations ul.station-list {
+	list-style-type: none;
+	padding: 0;
+	margin-bottom: 2em;
+}
+div.stations ul.station-list li {
+	padding: 0.5em;
+}
+button.station-button {
+	width: 100%;
+	background-color: transparent;
+	border: none;
+	padding: 0.7em;
+}
+button.station-button:focus {
+	font-weight: bold;
+}
+button.station-button:hover {
+	font-weight: bold;
+}
+input.station-search {
+	background-color: transparent;
+	border-top: none;
+	border-right: none;
+	border-left: none;
+	border-bottom: 1px solid rgba(0, 0, 0, 0.2);
+	outline: none;
+	text-align: center;
+}
+input.station-search:focus {
+	border-bottom: 1px solid rgba(0, 0, 0, 0.5);
+}
+/* Mobile */
+@media (max-width: 800px) {
+	body {
+		font-size: 14px;
+	}
+	div.container {
+		width: 100%;
+		height: 100%;
+	}
+	button.more-button {
+		padding: 1em;
+	}
+}
+/* Small Mobile */
+@media (max-width: 370px) {
+	body {
+		font-size: 12px;
+	}
+}
+/* Big screen */
+@media (min-width: 2500px) {
+	body {
+		font-size: 25px;
+	}
+}
