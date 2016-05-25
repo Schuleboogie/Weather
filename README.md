@@ -1,7 +1,4 @@
-<<<<<<< HEAD
-<<<<<<< HEAD
 =======
->>>>>>> de0850e6a65c776a0c1b3a424fd3dceed540f7e5
 # Blessuð blíðan
 ***
 Weather app with an [Angular](https://angularjs.org/) front end and a backend REST service written in [Go](https://golang.org/). Uses local storage to store fetched weather information. Weather information fetched from the [Icelandic Meteorological Office](http://www.vedur.is/) with the help of [APIS.is](https://github.com/apis-is/apis).
@@ -43,12 +40,4 @@ Run the tests
 * [Moment](http://momentjs.com/)
 * [SunCalc](https://github.com/mourner/suncalc)
 * [Normalize CSS](https://necolas.github.io/normalize.css/)
-* [Weather Icons](https://erikflowers.github.io/weather-icons/) by Erik Flowers
-=======
-<<<<<<< HEAD
-# Weather
-Small Angular weather app running on a Go server.
->>>>>>> 84cfcf9a23df48ab4e7889e5a9d120b7ec47bdda
-=======
-
->>>>>>> de0850e6a65c776a0c1b3a424fd3dceed540f7e5
+* [Weather Icons](https://erikflowers.github.io/weather-icons/)
