@@ -8,7 +8,7 @@ When in the root directory, start the app by typing:
 
 `$ weather`
 
-Server is now running at http://localhost:8080/.
+Server is now running at http://localhost:8080/
 
 ## Testing
 Testing requires [Protractor](http://www.protractortest.org/#/) and Selenium Server. Go into the _test_ directory and type
