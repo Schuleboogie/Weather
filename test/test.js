@@ -27,8 +27,4 @@ describe('Weather app', function() {
 			});
 		});
 	});
-
-	it('should not', function() {
-		expect(true).toBe(true);
-	});
 });
