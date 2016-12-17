@@ -21,17 +21,28 @@
 				</ul>
 			</div>
 		</div>
+		<div class="loading" ng-show="weather.Loading" ng-hide="!weather.Loading || StationList">Sæki gögn...</div>
 		<div class="error" ng-show="weather.Error" ng-hide="!weather.Error || StationList">{{ weather.Error }}</div>
 		<div class="results" ng-hide="weather.Error || StationList">
 			<h1 class="station-name">{{ weather.StationName }}</h1>
 			<div class="temperature" ng-mouseover="temphovered=true" ng-mouseleave="temphovered=false">
-				<span class="celsius" ng-show="celsius">{{ weather.Temperature }}<a class="unit" ng-mouseover="unitC=unitFahrenheit" ng-mouseleave="unitC=unitCelsius" ng-class="{hover: temphovered}" ng-click="unitC=unitFahrenheit;celsius=false">{{ unitC }}</a></span>
-				<span class="fahreneheit" ng-show="!celsius">{{ weather.TemperatureFahrenheit }}<a class="unit" ng-mouseover="unitF=unitCelsius" ng-mouseleave="unitF=unitFahrenheit" ng-class="{hover: temphovered}" ng-click="unitF=unitCelsius;celsius=true">{{ unitF }}</a></span>
+				<span class="celsius" ng-show="celsius">{{ weather.Temperature }}<a class="unit" ng-mouseover="unitC=unitFahrenheit" ng-mouseleave="unitC=unitCelsius" ng-click="unitC=unitFahrenheit;celsius=false">{{ unitC }}</a></span>
+				<span class="fahreneheit" ng-show="!celsius">{{ weather.TemperatureFahrenheit }}<a class="unit" ng-mouseover="unitF=unitCelsius" ng-mouseleave="unitF=unitFahrenheit" ng-click="unitF=unitCelsius;celsius=true">{{ unitF }}</a></span>
 			</div>
 			<div class="information-icons">
 				<span class="weather" ng-show="weather.icon"><i class="wi {{ weather.icon }}"></i></span>
 				<span class="wind" ng-show="weather.WindSpeed"><span class="wind-speed-alt" ng-hide="weather.wind">Vindhraði: </span><span class="wind-speed">{{ weather.WindSpeed }}</span><i class="wi {{ weather.wind }}" ng-show="weather.wind"></i></span>
 				<span class="moon" ng-show="weather.moon"><i class="wi {{ weather.moon }} moon-icon"></i></span>
+			</div>
+			<div class="forecast">
+				<ul class="forecast-list" ng-repeat="forecast in weather.Forecast">
+					<li>
+						<i class="wi {{ forecast.icon }}"></i>
+						<span class="forecast-temperature celsius" ng-show="celsius">{{ forecast.Temperature }}<span class="unit">{{ unitC }}</span></span>
+						<span class="forecast-temperature fahreneheit" ng-show="!celsius">{{ forecast.TemperatureFahrenheit }}<span class="unit">{{ unitF }}</span></span>
+						<span class="forecast-time">{{ forecast.Time }}</span>
+					</li>
+				</ul>
 			</div>
 			<button class="more-button" ng-click="more=!more;blurButton($event)" ng-class="{clicked: more}">Frekari upplýsingar</button>
 			<div class="information" ng-show="more">

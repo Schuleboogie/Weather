@@ -110,13 +110,20 @@
 			else return backgrounds[description];
 		}
 	});
-
+	// Setup
 	var weather = angular.module('weather', ['ngAnimate', 'LocalStorageModule', 'iconizer' , 'bgMaker']);
 	weather.config(function (localStorageServiceProvider) {
 		localStorageServiceProvider.setPrefix('weather');
 	});
 	const startingStation = "Reykjavík";
 	const stationText = "Fleiri stöðvar";
+	// View to display when loading
+	const loadingView = {
+		background: {
+			"background": "#6AC6F9"
+		},
+		Loading: true
+	};
 
 	// Temperature
 	const unitCelsius = "°C";
@@ -146,6 +153,12 @@
 			$scope.weather = data;
 			// Set icons and background
 			$scope.weather.icon = icon.weather(data.Description, new Date());
+			// Set weather icons for forecasts
+			if (data.Forecast) {
+				for (var i = 0; i < data.Forecast.length; i++) {
+					$scope.weather.Forecast[i].icon = icon.weather(data.Forecast[i].Description, new Date());
+				}
+			}
 			$scope.weather.wind = icon.wind(data.WindDirection);
 			$scope.weather.moon = icon.moon(new Date());
 			$scope.weather.background = {
@@ -167,6 +180,8 @@
 			$scope.currentStation = station;
 			$scope.StationList = !$scope.StationList;
 			$scope.moreButtonText = stationText;
+			// Show loading phase
+			$scope.weather = loadingView;
 			anchorman(station, callback);
 		};
 		// Search filter
@@ -220,14 +235,47 @@
 			if (oldData) {
 				$http({
 					method: 'GET',
-					url: '/rest',
+					url: '/weather',
 					params: {
 						"station": station
-					}
+					},
+					timeout: 5000
 				}).then(function success(response) {
 					var weather = response["data"];
+					// Time formatting
 					weather.TimeDate = weather.Time;
 					weather.Time = moment(weather.Time).format('LLL');
+					// Time formatting all forecasts
+					// Also removing all forecasts but forecasts three days into the future
+					// and make sure there is only one per day
+					if (weather.Forecast) {
+						var seenOneDayForecast = false;
+						var seenTwoDayForecast = false;
+						var seenThreeDayForecast = false;
+						for (var i = 0; i < weather.Forecast.length; i++) {
+							var difference = moment(weather.Forecast[i].Time).diff(new Date(), 'days');
+							if (difference === 1 && !seenOneDayForecast) {
+								seenOneDayForecast = true;
+								weather.Forecast[i].Time = moment(weather.Forecast[i].Time).format('ddd');
+								// Conversion to fahrenheit
+								weather.Forecast[i].TemperatureFahrenheit = (((weather.Forecast[i].Temperature*9)/5)+32).toFixed(0);
+							}
+							else if (difference === 2 && !seenTwoDayForecast) {
+								seenTwoDayForecast = true;
+								weather.Forecast[i].Time = moment(weather.Forecast[i].Time).format('ddd');
+								weather.Forecast[i].TemperatureFahrenheit = (((weather.Forecast[i].Temperature*9)/5)+32).toFixed(0);
+							}
+							else if (difference === 3 && !seenThreeDayForecast) {
+								seenThreeDayForecast = true;
+								weather.Forecast[i].Time = moment(weather.Forecast[i].Time).format('ddd');
+								weather.Forecast[i].TemperatureFahrenheit = (((weather.Forecast[i].Temperature*9)/5)+32).toFixed(0);
+							}
+							else {
+								weather.Forecast.splice(i, 1);
+								i--;
+							}
+						}
+					}
 					// Conversion to fahrenheit
 					weather.TemperatureFahrenheit = (((weather.Temperature*9)/5)+32).toFixed(0);
 					// Save in local storage

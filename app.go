@@ -8,6 +8,11 @@ import (
 	"encoding/json"
 )
 
+type ForecastInfo struct {
+	Time string
+	Temperature string
+	Description string
+}
 type WeatherInfo struct {
 	Error string
 	StationName string
@@ -23,6 +28,7 @@ type WeatherInfo struct {
 	AirPressure string
 	Humidity string
 	Precipitation string
+	Forecast []ForecastInfo
 }
 var StationNumbers = map[string]string {
 	"Reykjavík": "1",
@@ -40,12 +46,16 @@ var StationNumbers = map[string]string {
 	"Súðavík": "2646",
 	"Egilsstaðaflugvöllur": "571",
 }
-var restUrl = "http://apis.is/weather/observations/is"
+var weatherUrl = "http://apis.is/weather/observations/is"
+var forecastUrl = "http://apis.is/weather/forecasts/is"
 
-// Get the latest weather information
+// Get the latest weather information along with weather forecasts
 func getWeather(Station string) (*WeatherInfo, error) {
+	/*
+		Get weather information
+	*/
 	// Make request
-	req, err := http.NewRequest("GET", restUrl, nil)
+	req, err := http.NewRequest("GET", weatherUrl, nil)
 	q := req.URL.Query()
 	q.Add("stations", StationNumbers[Station]) // Station Reykjavík
 	q.Add("time", "3h") // Fetch data from stations updated every three hours
@@ -73,6 +83,48 @@ func getWeather(Station string) (*WeatherInfo, error) {
 	}
 	results := bodyJson["results"].([]interface{})
 	weatherList := results[0].(map[string]interface{})
+
+	/*
+		Get forecasts
+	*/
+	// Make request
+	req, err = http.NewRequest("GET", forecastUrl, nil)
+	q = req.URL.Query()
+	q.Add("stations", StationNumbers[Station]) // Station Reykjavík
+	req.URL.RawQuery = q.Encode()
+
+	// Send request
+	client = &http.Client{}
+	resp, err = client.Do(req)
+	if err != nil {
+		return nil, errors.New("Error sending request to APIS.is")
+	}
+	defer resp.Body.Close()
+
+	// Read from request
+	body, err = ioutil.ReadAll(resp.Body)
+	if err != nil {
+		return nil, errors.New("Error reading request from APIS.is")
+	}
+
+	// Decode JSON
+	if err = json.Unmarshal(body, &bodyJson); err != nil {
+		return nil, errors.New("Error decoding response from APIS.is")
+	}
+	results = bodyJson["results"].([]interface{})
+	station := results[0].(map[string]interface{})
+	forecastList := station["forecast"].([]interface{})
+	forecasts := make([]ForecastInfo, len(forecastList))
+	for i, fcast := range forecastList {
+		forecast := fcast.(map[string]interface{})
+		forecasts[i] = ForecastInfo{
+			Time: forecast["ftime"].(string),
+			Temperature: forecast["T"].(string),
+			Description: forecast["W"].(string),
+		}
+	}
+
+	// Create Weather object
 	weather := &WeatherInfo{
 		Error: weatherList["err"].(string),
 		StationName: weatherList["name"].(string),
@@ -88,6 +140,7 @@ func getWeather(Station string) (*WeatherInfo, error) {
 		AirPressure: weatherList["P"].(string),
 		Humidity: weatherList["RH"].(string),
 		Precipitation: weatherList["R"].(string),
+		Forecast: forecasts,
 	}
 
 	return weather, nil
@@ -133,7 +186,7 @@ func indexHandler(w http.ResponseWriter, r *http.Request) {
 func main() {
 	http.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir("public"))))
 	http.HandleFunc("/stations", stationListHandler)
-	http.HandleFunc("/rest", weatherHandler)
+	http.HandleFunc("/weather", weatherHandler)
 	http.HandleFunc("/", indexHandler)
 
 	log.Println("Server running...")
